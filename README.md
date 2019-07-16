@@ -30,4 +30,4 @@ so he will get a letter which is not in the encrypted text layer
 ```
 
 ### disadvantages
-english language is only supported
+only english is supported
