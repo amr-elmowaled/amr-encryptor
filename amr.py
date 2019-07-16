@@ -100,7 +100,7 @@ def accuracy(message):
 	    return 1
 
 
-def __letter_encrypt(message):
+def letter_encrypt(message):
 	encrypted_message = ""
 	for index, letter in enumerate(message):
 		letters_equation = index+2 # the equation of the letter encryption layer
