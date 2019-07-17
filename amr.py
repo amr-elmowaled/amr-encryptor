@@ -9,6 +9,9 @@ for i in range(10):
 
 letters = ''.join(letters)
 
+letters_equation = lambda index: index+2
+binaries_equation = lambda index: index*3-1
+
 def __isEnglish(s):
     try:
         s.encode(encoding='utf-8').decode('ascii')
@@ -47,13 +50,11 @@ def encrypt(message):
     assert __isEnglish(message)
     encrypted_message = ""
     for index, letter in enumerate(message):
-        letters_equation = index+2 # the equation of the letter encryption layer
-        encrypted_message += __letter_convert(letter, letters_equation) if letter in letters else letter
+        encrypted_message += __letter_convert(letter, letters_equation(index)) if letter in letters else letter
 
     encrypted_binary = []
     for index, letter in enumerate(encrypted_message):
-        binaries_equation = index*3-1 # the equation of the binary encryption layer
-        encrypted_binary += [__translate(bin(int(binascii.hexlify(letter), 16)), index%5, binaries_equation)]
+        encrypted_binary += [__translate(bin(int(binascii.hexlify(letter), 16)), -(index%3), binaries_equation(index))]
                 
     return '-'.join(encrypted_binary)
 
@@ -65,15 +66,13 @@ def decrypt(encrypted):
     decrypted_letters = ""
 
     for index, binary in enumerate(binaries):
-        binaries_equation = index*3-1 # the equation of the binary encryption layer
-        decrypted_binary += [__translate(binary, index%5, binaries_equation)]
+        decrypted_binary += [__translate(binary, -(index%3), binaries_equation(index))]
 
     for index, binary in enumerate(decrypted_binary):
         encrypted_letters += binascii.unhexlify('%x' % int(binary, 2))
 
     for index, letter in enumerate(encrypted_letters):
-        letters_equation = index+2 # the equation of the letter encryption layer
-        decrypted_letters += __letter_convert(letter, -letters_equation) if letter in letters else letter
+        decrypted_letters += __letter_convert(letter, -letters_equation(index)) if letter in letters else letter
     return decrypted_letters
 
 def super_encrypt(message):
@@ -85,11 +84,11 @@ def super_decrypt(message):
 
 
 def accuracy(message):
-    """ function that checks the total change done by the binary encrypting layer"""
+    """ function that checks the total change(effect) done by the binary encrypting layer"""
     assert __isEnglish(message)
     try:
 	    tested = test(encrypt(message))
-	    real = __letter_encrypt(message)
+	    real = letter_encrypt(message)
 	    similarity = len(real)-len(tested)
 	    for i, j in enumerate(real):
 		    if j == tested[i]:
@@ -103,8 +102,7 @@ def accuracy(message):
 def letter_encrypt(message):
 	encrypted_message = ""
 	for index, letter in enumerate(message):
-		letters_equation = index+2 # the equation of the letter encryption layer
-		encrypted_message += __letter_convert(letter, letters_equation) if letter in letters else letter
+		encrypted_message += __letter_convert(letter, letters_equation(index)) if letter in letters else letter
 
 	return encrypted_message
 
