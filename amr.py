@@ -60,6 +60,7 @@ def encrypt(message):
 
 def safe_encrypt(message, percentage=.7):
     """ function return a high percentage of binary layer encryption"""
+    assert __isEnglish(message) and percentage <= 1
     while accuracy(encrypt(message)) < percentage:
         message = ' ' + message
 
@@ -92,14 +93,16 @@ def super_decrypt(message):
 def accuracy(encrypted):
     """ function that checks the total change(effect) done by the binary encrypting layer"""
     try:
-	    tested = test(encrypted)
-	    real = letter_encrypt(decrypt(encrypted))
-	    similarity = len(real)-len(tested)
-	    for i, j in enumerate(real):
-		    if j == tested[i] and j != ' ':
-		    	similarity += 1
-	    
-	    return (len(real)-similarity)*1.0/len(real)
+            while encrypted.startswith('0b100000-'):
+                encrypted = encrypted[9:]
+
+            tested = test(encrypted)
+            real = letter_encrypt(decrypt(encrypted))
+            similarity = len(real)-len(tested)
+            for i, j in enumerate(real):
+                if j == tested[i] and j != ' ':
+                    similarity += 1
+            return (len(real)-similarity)*1.0/len(real)
     except ZeroDivisionError:
 	    raise "equation has high subtracting number which causes index out of bound"
     except:
