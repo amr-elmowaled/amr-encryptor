@@ -90,19 +90,24 @@ def super_decrypt(message):
     return decrypt(zlib.decompress(message))
 
 
+
 def accuracy(encrypted):
     """ function that checks the total change(effect) done by the binary encrypting layer"""
     try:
+            spaces = ''
             while encrypted.startswith('0b100000-'):
+                spaces += ' '
                 encrypted = encrypted[9:]
 
+            encrypted = '0b100000-'*len(spaces)+encrypted
+
             tested = test(encrypted)
-            real = letter_encrypt(decrypt(encrypted))
+            real = letter_encrypt(spaces + decrypt(encrypted))
             similarity = len(real)-len(tested)
             for i, j in enumerate(real):
                 if j == tested[i] and j != ' ':
                     similarity += 1
-            return (len(real)-similarity)*1.0/len(real)
+            return (len(real.strip())-similarity)*1.0/len(real.strip())
     except ZeroDivisionError:
 	    raise "equation has high subtracting number which causes index out of bound"
     except:
