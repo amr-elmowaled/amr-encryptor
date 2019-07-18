@@ -34,9 +34,8 @@ def __letter_convert(letter, value):
 
 def __translate(binary, index, value):
     
-    start = binary[:2]
-    binary = list(binary[2:])
-    index -= 2
+    start = binary[:3]
+    binary = list(binary[3:])
     new_index = index + value    
 
     while new_index > len(binary)-1:
@@ -54,7 +53,7 @@ def encrypt(message):
 
     encrypted_binary = []
     for index, letter in enumerate(encrypted_message):
-        encrypted_binary += [__translate(bin(int(binascii.hexlify(letter), 16)), -(index%3), binaries_equation(index))]
+        encrypted_binary += [__translate(bin(int(binascii.hexlify(letter), 16)), -(index%3)+1, binaries_equation(index))]
                 
     return '-'.join(encrypted_binary)
 
@@ -66,7 +65,7 @@ def decrypt(encrypted):
     decrypted_letters = ""
 
     for index, binary in enumerate(binaries):
-        decrypted_binary += [__translate(binary, -(index%3), binaries_equation(index))]
+        decrypted_binary += [__translate(binary, -(index%3)+1, binaries_equation(index))]
 
     for index, binary in enumerate(decrypted_binary):
         encrypted_letters += binascii.unhexlify('%x' % int(binary, 2))
