@@ -25,9 +25,33 @@ so he will get a letter which is not in the encrypted text layer
 'l1ye'
 >>> # notice the effect of the binary layer
 >>> # the binary layer caused to show the encrypted text layer `j1;U` while it's real value is `l1ye`
->>> amr.accuracy("java") # this function shows the difference of the encrypted text done by the binary layer and the `binary to text` without decrypting the binary
+>>> amr.accuracy(amr.encrypt("java")) # this function shows the difference of the encrypted text done by the binary layer and the `binary to text` without decrypting the binary
 0.75
 ```
-
+some times the `encrypt` function returns a low encryption level done by the binary encryption layer
+which increases the probability of decrypting the encrypted
+```python
+>>> amr.accuracy(amr.encrypt("hello"))
+0.2 
+```
+as you see only one letter was changed by the binary layer, to solve this i created `safe_encrypt` function
+this function returns a high percentage binary layer encryption
+```python
+>>> encrypted = amr.safe_encrypt("hello", percentage=0.7) # percentage takes the minimum accuracy value
+>>> amr.accuracy(encrypted)
+1.0
+>>> # the whole word was fully encrypted !!!
+>>> print amr.decrypt(encrypted)
+hello
+```
+since that this encryptor returns a binary string, it will has x8 times or less of the storage of the normal text
+to reduce its size i created `super_encrypt` and `super_decrypt` function
+```python
+>>> encrypted = amr.super_encrypt("welcome", safe_encryption=True) # turn true or false if you need to use safe_encryption or no
+'x\x9c3H24\x00\x01]\x83$CCCd\x06\x84e\x00\xe4\x00\x00\x8d\x9e\x07\x8c'
+>>> amr.super_decrypt(encrypted)
+'welcome'
+```
 ### disadvantages
 only english is supported
+the encrypted size is bigger than the text it self
