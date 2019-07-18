@@ -53,10 +53,17 @@ def encrypt(message):
 
     encrypted_binary = []
     for index, letter in enumerate(encrypted_message):
-        encrypted_binary += [__translate(bin(int(binascii.hexlify(letter), 16)), -(index%3)+1, binaries_equation(index))]
+        encrypted_binary += [__translate(bin(int(binascii.hexlify(letter), 16)), -((index)%4), binaries_equation(index))]
                 
     return '-'.join(encrypted_binary)
 
+
+def safe_encrypt(message, percentage=.7):
+    """ function return a high percentage of binary layer encryption"""
+    while accuracy(encrypt(message)) < percentage:
+        message = ' ' + message
+
+    return encrypt(message)
 
 def decrypt(encrypted):
     binaries = encrypted.split('-') if '-' in encrypted else [encrypted]
@@ -65,37 +72,38 @@ def decrypt(encrypted):
     decrypted_letters = ""
 
     for index, binary in enumerate(binaries):
-        decrypted_binary += [__translate(binary, -(index%3)+1, binaries_equation(index))]
+        decrypted_binary += [__translate(binary, -((index)%4), binaries_equation(index))]
 
     for index, binary in enumerate(decrypted_binary):
         encrypted_letters += binascii.unhexlify('%x' % int(binary, 2))
 
     for index, letter in enumerate(encrypted_letters):
         decrypted_letters += __letter_convert(letter, -letters_equation(index)) if letter in letters else letter
-    return decrypted_letters
+    return decrypted_letters.strip()
 
-def super_encrypt(message):
-    return zlib.compress(encrypt(message))
+def super_encrypt(message, safe_encryption=True):
+    return zlib.compress(safe_encrypt(message) if safe_encryption else encrypt(message))
 
 
 def super_decrypt(message):
     return decrypt(zlib.decompress(message))
 
 
-def accuracy(message):
+def accuracy(encrypted):
     """ function that checks the total change(effect) done by the binary encrypting layer"""
-    assert __isEnglish(message)
     try:
-	    tested = test(encrypt(message))
-	    real = letter_encrypt(message)
+	    tested = test(encrypted)
+	    real = letter_encrypt(decrypt(encrypted))
 	    similarity = len(real)-len(tested)
 	    for i, j in enumerate(real):
-		    if j == tested[i]:
+		    if j == tested[i] and j != ' ':
 		    	similarity += 1
 	    
 	    return (len(real)-similarity)*1.0/len(real)
+    except ZeroDivisionError:
+	    raise "equation has high subtracting number which causes index out of bound"
     except:
-	    return 1
+        return 1
 
 
 def letter_encrypt(message):
