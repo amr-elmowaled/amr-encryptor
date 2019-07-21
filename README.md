@@ -25,7 +25,7 @@ so he will get a letter which is not in the encrypted text layer
 'l1ye'
 >>> # notice the effect of the binary layer
 >>> # the binary layer caused to show the encrypted text layer `j1;U` while it's real value is `l1ye`
->>> amr.accuracy(amr.encrypt("java")) # this function shows the difference of the encrypted text done by the binary layer and the `binary to text` without decrypting the binary
+>>> amr.accuracy(amr.encrypt("java")) # this function measures the rate of success of the binary encryption layer
 0.75
 ```
 some times the `encrypt` function returns a low encryption level done by the binary encryption layer
