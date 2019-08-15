@@ -1,13 +1,7 @@
 import binascii
-from string import ascii_letters as letters
 import zlib
 
-# inserting numbers to the letters list for number encrypting
-letters = list(letters)
-for i in range(10):
-    letters.insert(i*4, str(i))
-
-letters = ''.join(letters)
+letters = '0ab~c1d<ef!2gh@i3jk#l4m?no$5p>qr6%st`u7^vw"x8y\\&zA,9BC*DE(F.G)HI_JK-LM+N}OP{Q|R/S[TUV]WXYZ\''
 
 letters_equation = lambda index: index+2
 binaries_equation = lambda index: index*3-1
@@ -55,7 +49,7 @@ def encrypt(message):
     for index, letter in enumerate(encrypted_message):
         encrypted_binary += [__translate(bin(int(binascii.hexlify(letter), 16)), -((index)%4), binaries_equation(index))]
                 
-    return '-'.join(encrypted_binary)
+    return to_letters('-'.join(encrypted_binary))
 
 
 def safe_encrypt(message, percentage=.7):
@@ -67,7 +61,7 @@ def safe_encrypt(message, percentage=.7):
     return encrypt(message)
 
 def decrypt(encrypted):
-    binaries = encrypted.split('-') if '-' in encrypted else [encrypted]
+    binaries = [bin(int(binascii.hexlify(i), 16)) for i in encrypted]
     decrypted_binary = []
     encrypted_letters = ""
     decrypted_letters = ""
@@ -90,9 +84,9 @@ def super_decrypt(message):
     return decrypt(zlib.decompress(message))
 
 
-
 def accuracy(encrypted):
     """ function that checks the total change(effect) done by the binary encrypting layer"""
+    encrypted = '-'.join([bin(int(binascii.hexlify(i), 16)) for i in encrypted])
     try:
             spaces = ''
             while encrypted.startswith('0b100000-'):
@@ -101,8 +95,8 @@ def accuracy(encrypted):
 
             encrypted = '0b100000-'*len(spaces)+encrypted
 
-            tested = test(encrypted)
-            real = letter_encrypt(spaces + decrypt(encrypted))
+            tested = to_letters(encrypted)
+            real = letter_encrypt(spaces + decrypt(to_letters(encrypted)))
             similarity = len(real)-len(tested)
             for i, j in enumerate(real):
                 if j == tested[i] and j != ' ':
@@ -121,12 +115,19 @@ def letter_encrypt(message):
 
 	return encrypted_message
 
+def letter_decrypt(message):
+    encrypted_message = ""
+    for index, letter in enumerate(message):
+    	encrypted_message += __letter_convert(letter, -letters_equation(index)) if letter in letters else letter
+
+    return encrypted_message
 
 
-def test(encrypted):
-        # this  function shows you what happens when trying to convert binary to text without decrypting the binary
-	text = ""
-	c = encrypted.split("-") if "-" in encrypted else [encrypted]
-	for i in c:
-		text += binascii.unhexlify('%x' % int(i, 2))
-	return text
+
+def to_letters(encrypted):
+    """ this  function shows you what happens when trying to convert binary to text without decrypting the binary """
+    text = ""
+    c = encrypted.split("-") if "-" in encrypted else [encrypted]
+    for i in c:
+    	text += binascii.unhexlify('%x' % int(i, 2))
+    return text
