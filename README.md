@@ -54,4 +54,3 @@ to reduce its size i created `super_encrypt` and `super_decrypt` function
 ```
 ### disadvantages
 only english is supported
-the encrypted size is bigger than the text it self
