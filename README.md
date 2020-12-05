@@ -18,7 +18,7 @@ so he will get a letter which is not in the encrypted text layer
 ```python
 
 >>> import amr
->>> encrypted = amr.encrypt("java") # 0b1101010-0b110001-0b0111011-0b1010101
+>>> encrypted = amr.encrypt("java")
 >>> amr.test(encrypted) # this line converts the binary to letters without decrypting the binary
 'j1;U'
 >>> amr.letter_encrypt("java") # this is the real output of the text encryption
