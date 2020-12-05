@@ -1,10 +1,10 @@
 # amr-encryptor
 this is a custom text encryptor and decryptor python file.
 ### how it works
-the encryptor has two layers `text` and `binary` layer
-the text layer converts each character into another one with by an equation
-the equation uses only one variable which is the index of the character in the sentence
-while the `binary` layer changes the order of a number in the binary code, also it works with
+the encryptor has two layers `text` and `binary` layers,
+the text layer converts each character into another one using a mathimatical equation which returns an integer,
+the equation uses only one variable which is the index of the character in the string
+while the `binary` layer changes the order of a number in the binary code, it also works with
 an equation that uses an equation with the index of each binary code.
 
 # advantages
