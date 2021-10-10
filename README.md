@@ -53,4 +53,4 @@ to reduce its size i created `super_encrypt` and `super_decrypt` function
 'welcome'
 ```
 ### disadvantages
-only english is supported
+only ascii code is supported
